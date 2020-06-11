@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 
-export class NodeDependenciesProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
+export class PackageProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     constructor(private workspaceRoot: string) {}
 
     getTreeItem(element: Dependency): Dependency {

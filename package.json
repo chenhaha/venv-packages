@@ -10,21 +10,21 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onView:nodeDependencies"
+		"onView:sitePackages"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"views": {
 		  "explorer": [
 			{
-			  "id": "nodeDependencies",
-			  "name": "Node Dependencies"
+			  "id": "sitePackages",
+			  "name": "site-packages"
 			}
 		  ]
 		},
 		"commands": [
 			{
-			  "command": "helloworld.openfile",
+			  "command": "extension.openfile",
 			  "title": "openfile"
 			}
 		]
