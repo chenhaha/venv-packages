@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-
+import * as cp from 'child_process';
 
 export class PackageProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
     constructor(private workspaceRoot: string) {}
@@ -21,6 +21,14 @@ export class PackageProvider implements vscode.TreeDataProvider<vscode.TreeItem>
         let sitePackagePath = finder.getPackagePath(interpreterPath);
         return Promise.resolve(this.getDeps(sitePackagePath));
       }
+    }
+
+    private _onDidChangeTreeData: vscode.EventEmitter<void> = new vscode.EventEmitter<void>();
+    readonly onDidChangeTreeData: vscode.Event<void> = this._onDidChangeTreeData.event;
+
+    refresh(): void {
+      this._onDidChangeTreeData.fire();
+      // let a = 1;
     }
 
     getDeps(path_: string) :Dependency[] {
@@ -74,26 +82,15 @@ class PackageFolderFinder{
   }
 
   getPackagePath(interpreterPath: string): string {
-    let venvPath = path.dirname(path.dirname(interpreterPath));
-    let libPath = path.join(venvPath, 'lib');
-
-    if (!this.pathExists(libPath)) {
-      throw new Error('no lib folder');
+    let cmd = interpreterPath + ' ' + '-c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"';
+    let res = cp.execSync(cmd).toString().trim();
+    
+    if (!this.pathExists(res)){
+      throw new Error('can not find site-package directory');
     }
 
-    let pythonFolder;
-    fs.readdirSync(libPath).forEach(file => {
-      if (file.indexOf('python') !== -1){
-       pythonFolder = file;
-       return;
-      }
-    });
+    return res;
 
-    if (!pythonFolder){
-      throw new Error('new python folder');
-    }
-
-    return path.join(libPath, pythonFolder, 'site-packages');
   }
 
   private pathExists(p: string): Boolean {

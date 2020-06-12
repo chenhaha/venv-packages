@@ -23,13 +23,14 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	// vscode.window.showInformationMessage('Hello World from HelloWorld! hahaha');
 	let folders = vscode.workspace.workspaceFolders;
 
 	if (folders) {
 	  let rootPath = folders[0]['uri']['path'];
 
 	  const provider = new PackageProvider(rootPath);
+
+	  vscode.commands.registerCommand('extension.refreshEntry', () => provider.refresh());
 
 	  vscode.window.registerTreeDataProvider(
 	    'sitePackages',

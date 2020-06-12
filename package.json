@@ -26,8 +26,24 @@
 			{
 			  "command": "extension.openfile",
 			  "title": "openfile"
+			},
+			{
+				"command": "extension.refreshEntry",
+				"title": "Refresh",
+				"icon": {
+                    "light": "refresh.svg",
+                    "dark": "refresh.svg"
+                }
 			}
-		]
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "extension.refreshEntry",
+					"when": "view == sitePackages"
+				}
+			]
+		}
 	  },
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
